@@ -1,0 +1,28 @@
+Stage,Technique,MITRE_ID,Timestamp,Hostname,Account,Detail,Severity
+1 - Initial Access,Office application spawned scripting engine with obfuscation flags,T1566.001 / T1204.002 / T1059.001,2026-07-14 09:16:12,WKS-FIN-07,s.jenkins,WINWORD.EXE -> powershell.exe :: powershell.exe -nop -w hidden -enc <base64-encoded-command>,Critical
+2 - Credential Theft,Process accessed LSASS memory with a credential-dumping access mask,T1003.001,2026-07-14 09:45:09,WKS-FIN-07,s.jenkins,svchost_upd.exe accessed lsass.exe (GrantedAccess=0x1010),Critical
+2 - Credential Theft,Suspected LSASS memory dump artifact written to disk,T1003.001,2026-07-14 09:45:20,WKS-FIN-07,s.jenkins,"C:\Users\s.jenkins\AppData\Local\Temp\lsass_dump.tmp (61,204,112 bytes)",Critical
+3 - Lateral Movement,Remote service installed (PsExec-style execution),T1569.002,2026-07-14 10:30:20,WKS-ENG-12,j.alvarez,Service installed on WKS-ENG-12 by j.alvarez from source 10.10.12.47,High
+3 - Lateral Movement,Remote service installed (PsExec-style execution),T1569.002,2026-07-14 10:45:28,WKS-HR-03,j.alvarez,Service installed on WKS-HR-03 by j.alvarez from source 10.10.12.47,High
+3 - Lateral Movement,Single account authenticated to multiple hosts in a short window,T1021.002,2026-07-14 10:55:34,SRV-FILE-01,j.alvarez,"j.alvarez logged into 3 hosts within 90 min: ['SRV-FILE-01', 'WKS-ENG-12', 'WKS-HR-03']",Critical
+3 - Lateral Movement,Remote service installed (PsExec-style execution),T1569.002,2026-07-14 10:55:43,SRV-FILE-01,j.alvarez,Service installed on SRV-FILE-01 by j.alvarez from source 10.10.12.47,High
+3 - Lateral Movement,Remote service installed (PsExec-style execution),T1569.002,2026-07-14 11:07:43,SRV-DC-01,j.alvarez,Service installed on SRV-DC-01 by j.alvarez from source 10.10.12.47,High
+4 - Data Exfiltration Attempt,Archive utility used to stage data (likely pre-exfil compression),T1560,2026-07-14 12:31:00,SRV-FILE-01,j.alvarez,"7z.exe :: 7z.exe a -mx1 archive_backup.7z ""\\SRV-FILE-01\Shared\*""",High
+4 - Data Exfiltration Attempt,Anomalously large outbound transfer to external host (NOT blocked),T1041,2026-07-14 12:44:00,10.10.5.10,n/a,"10.10.5.10 -> 203.0.113.77:443 (1,800,000,000 bytes, action=Allow)",Critical
+4 - Data Exfiltration Attempt,Anomalously large outbound transfer to external host (blocked at perimeter),T1041,2026-07-14 12:51:30,10.10.5.10,n/a,"10.10.5.10 -> 203.0.113.77:443 (210,000,000 bytes, action=Blocked)",High
+5 - Ransomware Deployment,Volume shadow copies deleted (backup/recovery sabotage),T1490,2026-07-14 14:00:39,WKS-ENG-12,j.alvarez,vssadmin.exe delete shadows /all /quiet,Critical
+5 - Ransomware Deployment,Security audit log cleared (anti-forensics),T1070.001,2026-07-14 14:00:39,WKS-ENG-12,j.alvarez,1102 event log clear,High
+5 - Ransomware Deployment,Volume shadow copies deleted (backup/recovery sabotage),T1490,2026-07-14 14:00:54,SRV-FILE-01,j.alvarez,vssadmin.exe delete shadows /all /quiet,Critical
+5 - Ransomware Deployment,Security audit log cleared (anti-forensics),T1070.001,2026-07-14 14:00:54,SRV-FILE-01,j.alvarez,1102 event log clear,High
+5 - Ransomware Deployment,Security audit log cleared (anti-forensics),T1070.001,2026-07-14 14:02:43,WKS-FIN-07,j.alvarez,1102 event log clear,High
+5 - Ransomware Deployment,Volume shadow copies deleted (backup/recovery sabotage),T1490,2026-07-14 14:02:43,WKS-FIN-07,j.alvarez,vssadmin.exe delete shadows /all /quiet,Critical
+5 - Ransomware Deployment,Security audit log cleared (anti-forensics),T1070.001,2026-07-14 14:03:21,WKS-HR-03,j.alvarez,1102 event log clear,High
+5 - Ransomware Deployment,Volume shadow copies deleted (backup/recovery sabotage),T1490,2026-07-14 14:03:21,WKS-HR-03,j.alvarez,vssadmin.exe delete shadows /all /quiet,Critical
+5 - Ransomware Deployment,Mass file rename to a single unfamiliar extension (consistent with encryption),T1486,2026-07-14 14:14:00,WKS-ENG-12,j.alvarez,4 files renamed to *.shadowvault within 21s (process: encryptor.exe),Critical
+5 - Ransomware Deployment,Ransom note file created,T1486,2026-07-14 14:14:45,WKS-ENG-12,j.alvarez,C:\Users\Shared\!!!RECOVER_YOUR_FILES!!!.txt,Critical
+5 - Ransomware Deployment,Mass file rename to a single unfamiliar extension (consistent with encryption),T1486,2026-07-14 14:16:00,WKS-HR-03,j.alvarez,4 files renamed to *.shadowvault within 21s (process: encryptor.exe),Critical
+5 - Ransomware Deployment,Ransom note file created,T1486,2026-07-14 14:16:45,WKS-HR-03,j.alvarez,C:\Users\Shared\!!!RECOVER_YOUR_FILES!!!.txt,Critical
+5 - Ransomware Deployment,Mass file rename to a single unfamiliar extension (consistent with encryption),T1486,2026-07-14 14:26:00,SRV-FILE-01,j.alvarez,4 files renamed to *.shadowvault within 21s (process: encryptor.exe),Critical
+5 - Ransomware Deployment,Ransom note file created,T1486,2026-07-14 14:26:45,SRV-FILE-01,j.alvarez,C:\Users\Shared\!!!RECOVER_YOUR_FILES!!!.txt,Critical
+5 - Ransomware Deployment,Mass file rename to a single unfamiliar extension (consistent with encryption),T1486,2026-07-14 14:30:00,WKS-FIN-07,j.alvarez,4 files renamed to *.shadowvault within 21s (process: encryptor.exe),Critical
+5 - Ransomware Deployment,Ransom note file created,T1486,2026-07-14 14:30:45,WKS-FIN-07,j.alvarez,C:\Users\Shared\!!!RECOVER_YOUR_FILES!!!.txt,Critical

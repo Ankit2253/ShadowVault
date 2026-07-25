@@ -1,0 +1,30 @@
+Timestamp,Hostname,EventID,EventDescription,Account,Domain,SourceIP,LogonType,Status
+2026-07-14 08:02:45,WKS-HR-03,4624,An account was successfully logged on,r.patel,MERIDIAN,10.10.16.9,2,Success
+2026-07-14 08:02:49,WKS-ENG-12,4624,An account was successfully logged on,t.oconnor,MERIDIAN,10.10.14.22,2,Success
+2026-07-14 08:25:00,WKS-HR-03,4624,An account was successfully logged on,k.wright,MERIDIAN,10.10.16.9,2,Success
+2026-07-14 08:31:45,WKS-IT-02,4624,An account was successfully logged on,j.alvarez,MERIDIAN,10.10.20.5,2,Success
+2026-07-14 08:39:33,SRV-FILE-01,4624,An account was successfully logged on,svc_backup,MERIDIAN,10.10.5.10,2,Success
+2026-07-14 08:39:59,WKS-FIN-07,4624,An account was successfully logged on,s.jenkins,MERIDIAN,10.10.12.47,2,Success
+2026-07-14 08:41:27,WKS-ENG-12,4624,An account was successfully logged on,m.chen,MERIDIAN,10.10.14.22,2,Success
+2026-07-14 09:14:02,WKS-FIN-07,4624,An account was successfully logged on,s.jenkins,MERIDIAN,10.10.12.47,2,Success
+2026-07-14 09:16:12,WKS-FIN-07,4688,A new process has been created,s.jenkins,MERIDIAN,10.10.12.47,,
+2026-07-14 10:24:00,WKS-FIN-07,4672,Special privileges assigned to new logon,j.alvarez,MERIDIAN,10.10.12.47,,Success
+2026-07-14 10:30:11,WKS-ENG-12,4624,An account was successfully logged on,j.alvarez,MERIDIAN,10.10.12.47,3,Success
+2026-07-14 10:30:15,WKS-ENG-12,4672,Special privileges assigned to new logon,j.alvarez,MERIDIAN,10.10.12.47,,Success
+2026-07-14 10:30:20,WKS-ENG-12,4697,A service was installed in the system,j.alvarez,MERIDIAN,10.10.12.47,,
+2026-07-14 10:45:19,WKS-HR-03,4624,An account was successfully logged on,j.alvarez,MERIDIAN,10.10.12.47,3,Success
+2026-07-14 10:45:23,WKS-HR-03,4672,Special privileges assigned to new logon,j.alvarez,MERIDIAN,10.10.12.47,,Success
+2026-07-14 10:45:28,WKS-HR-03,4697,A service was installed in the system,j.alvarez,MERIDIAN,10.10.12.47,,
+2026-07-14 10:55:34,SRV-FILE-01,4624,An account was successfully logged on,j.alvarez,MERIDIAN,10.10.12.47,3,Success
+2026-07-14 10:55:38,SRV-FILE-01,4672,Special privileges assigned to new logon,j.alvarez,MERIDIAN,10.10.12.47,,Success
+2026-07-14 10:55:43,SRV-FILE-01,4697,A service was installed in the system,j.alvarez,MERIDIAN,10.10.12.47,,
+2026-07-14 11:07:34,SRV-DC-01,4624,An account was successfully logged on,j.alvarez,MERIDIAN,10.10.12.47,3,Success
+2026-07-14 11:07:38,SRV-DC-01,4672,Special privileges assigned to new logon,j.alvarez,MERIDIAN,10.10.12.47,,Success
+2026-07-14 11:07:43,SRV-DC-01,4697,A service was installed in the system,j.alvarez,MERIDIAN,10.10.12.47,,
+2026-07-14 11:41:00,WKS-ENG-12,4625,An account failed to log on,m.chen,MERIDIAN,10.10.14.22,3,Failure
+2026-07-14 14:00:39,WKS-ENG-12,1102,The audit log was cleared,j.alvarez,MERIDIAN,10.10.14.22,,
+2026-07-14 14:00:54,SRV-FILE-01,1102,The audit log was cleared,j.alvarez,MERIDIAN,10.10.5.10,,
+2026-07-14 14:02:43,WKS-FIN-07,1102,The audit log was cleared,j.alvarez,MERIDIAN,10.10.12.47,,
+2026-07-14 14:03:21,WKS-HR-03,1102,The audit log was cleared,j.alvarez,MERIDIAN,10.10.16.9,,
+2026-07-14 14:08:00,SRV-FILE-01,4625,An account failed to log on,svc_backup,MERIDIAN,10.10.5.10,3,Failure
+2026-07-14 16:27:00,WKS-HR-03,4625,An account failed to log on,k.wright,MERIDIAN,10.10.16.9,3,Failure
