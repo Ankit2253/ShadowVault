@@ -17,11 +17,14 @@ from detectors import initial_access, credential_access, lateral_movement, exfil
 SEVERITY_WEIGHT = {"Critical": 3, "High": 2, "Medium": 1, "Low": 0}
 
 PROCESSED_DIR = Path(__file__).resolve().parent.parent / "data" / "processed"
+ALERT_COLUMNS = [
+    "Stage", "Technique", "MITRE_ID", "Timestamp",
+    "Hostname", "Account", "Detail", "Severity",
+]
 
 
-def run_all_detectors():
-    sec, sysmon, fw, files = load_logs()
-
+def correlate_logs(sec, sysmon, fw, files):
+    """Run every detector against four already-loaded telemetry frames."""
     all_alerts = []
     all_alerts += initial_access.detect(sysmon)
     all_alerts += credential_access.detect(sysmon, files)
@@ -29,11 +32,21 @@ def run_all_detectors():
     all_alerts += exfiltration.detect(sysmon, fw)
     all_alerts += ransomware.detect(sysmon, sec, files)
 
-    timeline = pd.DataFrame(all_alerts).sort_values("Timestamp").reset_index(drop=True)
+    if not all_alerts:
+        return pd.DataFrame(columns=ALERT_COLUMNS)
+    timeline = pd.DataFrame(all_alerts, columns=ALERT_COLUMNS)
+    timeline = timeline.sort_values("Timestamp").reset_index(drop=True)
     return timeline
 
 
+def run_all_detectors():
+    """Load the bundled dataset and return its correlated alert timeline."""
+    return correlate_logs(*load_logs())
+
+
 def score_by_host(timeline):
+    if timeline.empty:
+        return pd.DataFrame(columns=["Hostname", "RiskScore"])
     scored = timeline.copy()
     scored["Weight"] = scored["Severity"].map(SEVERITY_WEIGHT).fillna(0)
     risk = (scored.groupby("Hostname")["Weight"].sum()
@@ -43,6 +56,8 @@ def score_by_host(timeline):
 
 
 def attack_chain_summary(timeline):
+    if timeline.empty:
+        return pd.DataFrame(columns=["Stage", "Alerts", "First_Seen", "Last_Seen"])
     return (timeline.groupby("Stage")
             .agg(Alerts=("Stage", "count"),
                  First_Seen=("Timestamp", "min"),

@@ -1,0 +1,12 @@
+{
+  "benchmark": "labelled synthetic ShadowVault scenario",
+  "true_positives": 27,
+  "false_positives": 0,
+  "false_negatives": 0,
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1_score": 1.0,
+  "expected_alerts": 27,
+  "generated_alerts": 27,
+  "scope_note": "Metrics describe this deterministic training dataset only; they are not production performance claims."
+}

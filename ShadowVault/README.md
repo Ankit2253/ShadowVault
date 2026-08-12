@@ -1,145 +1,180 @@
-# Operation ShadowVault — Ransomware Incident Response Simulation
+# Operation ShadowVault
 
-A self-contained SOC/DFIR portfolio project: a synthetic multi-source log
-dataset simulating a full ransomware kill chain, plus a Python detection
-and correlation engine that reconstructs the incident from the logs alone
-— stage by stage — and produces an analyst-style incident report.
+![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-unittest-0A9EDC)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Scope](https://img.shields.io/badge/scope-safe%20simulation-purple)
 
-**Scenario:** A manufacturing company detects unusual activity on a
-Windows endpoint. Employees report slow systems and missing files.
-Investigation reveals a five-stage intrusion:
+An end-to-end SOC and DFIR portfolio lab that reconstructs a simulated ransomware intrusion from multi-source telemetry. The project generates a reproducible dataset, applies MITRE ATT&CK-mapped detections, correlates evidence into an incident timeline, ranks affected assets, evaluates the rules against labelled ground truth, and generates an analyst-ready case report.
 
+> This is a safe defensive simulation. It contains log records describing attacker behavior; it does not contain exploit, credential-dumping, persistence, or encryption functionality.
+
+## What this project demonstrates
+
+- Detection engineering across Windows Security, Sysmon, firewall, and file-system telemetry.
+- Alert correlation across five attack stages and multiple hosts.
+- MITRE ATT&CK mapping for 11 techniques and sub-techniques.
+- SOC triage through severity, evidence, affected-account, and asset context.
+- DFIR reporting with IOCs, containment priorities, recovery actions, and analyst confidence.
+- Reproducibility through a seeded data generator, labelled ground truth, automated tests, and CI.
+- Investigation visualization through an interactive Streamlit dashboard.
+- Recruiter-supplied CSV analysis with schema validation and in-memory processing.
+
+## Attack story
+
+```mermaid
+flowchart TD
+    A["Phishing attachment"] --> B["PowerShell execution"]
+    B --> C["LSASS credential access"]
+    C --> D["SMB and service-based lateral movement"]
+    D --> E["Archive staging and outbound transfer"]
+    E --> F["Recovery inhibition and encryption"]
 ```
-Initial Access → Credential Theft → Lateral Movement →
-Data Exfiltration Attempt → Ransomware Deployment
-```
 
-> **Scope note:** This project analyzes and detects simulated attacker
-> *behavior* recorded in log data. It does not contain or execute any
-> functional exploit, credential-dumping, or ransomware/encryption code —
-> the "attack" exists only as realistic log rows for the detection
-> pipeline to find, exactly like the public BOTS / DetectionLab-style
-> training datasets used in real SOC training.
+The fictional organization, Meridian Precision Manufacturing, is compromised after an Accounts Payable user opens a malicious Office attachment. The activity progresses from execution on `WKS-FIN-07` to credential theft, privileged lateral movement, attempted data exfiltration, shadow-copy deletion, event-log clearing, and mass file renaming.
 
-## Why this project
+## Detection coverage
 
-Most portfolio "security projects" are either a static writeup or a
-single script. This one is structured the way real detection engineering
-work is: independent, technique-scoped detectors (one per MITRE ATT&CK
-technique) feeding a correlation layer that builds a unified timeline and
-risk score — the same pattern a SIEM correlation rule set follows.
+| Stage | ATT&CK coverage | Primary evidence |
+|---|---|---|
+| Initial access | T1566.001, T1204.002, T1059.001 | Office process spawning obfuscated PowerShell |
+| Credential access | T1003.001 | Sysmon Event 10 access to LSASS plus dump artifact |
+| Lateral movement | T1021.002, T1569.002 | Network logons across hosts and remote service creation |
+| Exfiltration | T1560, T1041 | Archive utility execution and unusually large outbound transfers |
+| Impact and anti-forensics | T1490, T1486, T1070.001 | Shadow deletion, rename burst, ransom note, log clearing |
+
+## Verified sample results
+
+| Result | Value |
+|---|---:|
+| Raw log events | 210 |
+| Correlated alerts | 27 |
+| Attack stages reconstructed | 5 |
+| Named assets with alert evidence | 5 |
+| Highest-risk asset | `SRV-FILE-01` |
+| Synthetic benchmark precision / recall / F1 | 1.00 / 1.00 / 1.00 |
+
+The evaluation is an exact-match benchmark against the labelled, deterministic lab scenario. It proves that the included rules recover the intended evidence without extra alerts in this dataset; it is not a claim of production accuracy or generalization.
 
 ## Architecture
 
+```mermaid
+flowchart LR
+    A["Synthetic log sources"] --> B["Technique detectors"]
+    B --> C["Correlation engine"]
+    C --> D["Timeline and risk scores"]
+    D --> E["Dashboard"]
+    D --> F["Incident report"]
+    C --> G["Ground-truth evaluation"]
 ```
-ShadowVault/
+
+```text
+ShadowVault-Pro/
+├── .github/workflows/ci.yml       # GitHub Actions test matrix
 ├── data/
-│   ├── raw/                  # synthetic log sources (generated)
-│   │   ├── windows_security_events.csv
-│   │   ├── sysmon_events.csv
-│   │   ├── network_firewall_logs.csv
-│   │   └── file_activity_logs.csv
-│   └── processed/            # correlation engine output
-│       ├── incident_timeline.csv
-│       ├── host_risk_scores.csv
-│       └── attack_chain_summary.csv
-├── src/
-│   ├── log_generator.py      # builds the synthetic dataset (noise + attack chain)
-│   ├── utils.py               # shared log-loading / alert helpers
-│   ├── correlation_engine.py  # runs all detectors, builds timeline + risk scores
-│   ├── report_generator.py    # renders the Markdown incident report
-│   └── detectors/
-│       ├── initial_access.py      # T1566.001 / T1204.002 / T1059.001
-│       ├── credential_access.py   # T1003.001
-│       ├── lateral_movement.py    # T1021.002 / T1569.002
-│       ├── exfiltration.py        # T1560 / T1041
-│       └── ransomware.py          # T1490 / T1486 / T1070.001
-├── notebooks/
-│   └── ShadowVault_Analysis.ipynb # full walkthrough with plotly visualizations
+│   ├── raw/                       # four generated telemetry sources
+│   ├── ground_truth/              # labelled expected detections
+│   └── processed/                 # timeline, scores, summary, metrics
 ├── docs/
-│   └── MITRE_ATTACK_MAPPING.md    # technique-to-ID reference + attack flow diagram
-├── reports/
-│   └── incident_report.md         # generated incident report (sample included)
-└── requirements.txt
+│   ├── MITRE_ATTACK_MAPPING.md
+│   └── PORTFOLIO_GUIDE.md
+├── notebooks/ShadowVault_Analysis.ipynb
+├── reports/incident_report.md
+├── src/
+│   ├── detectors/                 # five technique-scoped detectors
+│   ├── correlation_engine.py
+│   ├── evaluate.py
+│   ├── log_generator.py
+│   └── report_generator.py
+├── tests/                         # detector and end-to-end tests
+├── dashboard.py
+└── run_pipeline.py                # one-command workflow
 ```
 
-## How the dataset works
+## Run locally
 
-`src/log_generator.py` builds a full business day of activity across 6
-hosts and 7 accounts at a fictional manufacturing company: normal logons,
-routine file saves, and browsing traffic, with the five-stage attack
-chain embedded at realistic points in the timeline. It's seeded
-(`RNG_SEED = 1337`) for reproducibility. External/attacker IPs use the
-IANA-reserved documentation range `203.0.113.0/24` — not real addresses.
-
-## Results (sample run)
-
-| Stage | Alerts | Window |
-|---|---|---|
-| 1 — Initial Access | 1 | 09:16:12 |
-| 2 — Credential Theft | 2 | 09:45:09 – 09:45:20 |
-| 3 — Lateral Movement | 5 | 10:30:20 – 11:07:43 |
-| 4 — Data Exfiltration Attempt | 3 | 12:31:00 – 12:51:30 |
-| 5 — Ransomware Deployment | 16 | 14:00:39 – 14:30:45 |
-
-**Top-risk hosts:** WKS-FIN-07 (patient zero, score 20), SRV-FILE-01 (file
-server, score 18) — matching the actual attack path.
-
-27 alerts fired against ~200 rows of benign background noise with **zero
-false positives**, because every detector targets one specific,
-well-documented technique signature rather than generic anomaly scoring.
-
-## Running it
+### 1. Create an environment
 
 ```bash
-pip install -r requirements.txt
-
-# 1. Generate the synthetic dataset
-python src/log_generator.py
-
-# 2. Run detection + correlation
-python src/correlation_engine.py
-
-# 3. Generate the incident report
-python src/report_generator.py
-
-# 4. Or explore interactively:
-jupyter notebook notebooks/ShadowVault_Analysis.ipynb
+python -m venv .venv
 ```
 
-Each detector can also be run standalone for testing, e.g.
-`python src/detectors/ransomware.py`.
+Windows PowerShell:
 
-## SOC dashboard
+```powershell
+.venv\Scripts\Activate.ps1
+pip install -r requirements-dev.txt
+```
 
-After generating the dataset and running the correlation engine, launch the
-interactive investigation dashboard:
+macOS or Linux:
+
+```bash
+source .venv/bin/activate
+pip install -r requirements-dev.txt
+```
+
+### 2. Run the complete pipeline
+
+```bash
+python run_pipeline.py
+```
+
+This regenerates the logs, correlates alerts, evaluates detections, and rebuilds the incident report.
+
+### 3. Run automated tests
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+### 4. Open the SOC dashboard
 
 ```bash
 streamlit run dashboard.py
 ```
 
-The dashboard provides an attack timeline, per-host risk scores, stage coverage,
-filterable evidence, and a CSV export for filtered alerts.
+The dashboard provides two data modes:
 
-## MITRE ATT&CK Coverage
+- **Built-in simulation:** explore the included ransomware case and its labelled benchmark.
+- **Upload my CSV logs:** upload four compatible telemetry files, validate their schemas, run the same detectors in memory, and download alerts plus a neutral incident report.
 
-See [`docs/MITRE_ATTACK_MAPPING.md`](docs/MITRE_ATTACK_MAPPING.md) for the
-full technique table and attack flow diagram.
+Uploaded files do not overwrite the sample dataset. Ground-truth benchmark scores are disabled for custom files because their true labels are unknown.
 
-## Possible extensions
+The investigation view includes stage, severity, and host filters; a timeline; asset risk scores; ATT&CK-stage coverage; evidence review; and CSV/report export.
 
-- A sixth detector for C2 beaconing (regular-interval outbound connections).
-- Replace the severity-weighted risk score with a proper anomaly-detection model.
-- Feed `data/processed/incident_timeline.csv` into a live dashboard (e.g. Streamlit).
-- Parameterize `log_generator.py` to emit variant attack chains for a small "CTF" set of scenarios.
+### Uploaded CSV schemas
 
-## Resume framing
+The easiest way to test custom data is to export CSVs with the same headers as the four files in `data/raw/`. The dashboard displays every required column before upload. All four sources are required because the rules correlate Windows Security, Sysmon, firewall, and file activity evidence.
 
-> Built an end-to-end ransomware incident-response simulation: engineered
-> a synthetic multi-source log dataset (Windows Security, Sysmon,
-> firewall, file-activity) modeling a 5-stage intrusion, then wrote a
-> Python detection engine (5 MITRE ATT&CK-mapped detectors + a
-> correlation/timeline/risk-scoring layer) that reconstructs the full
-> attack chain and auto-generates an incident report, achieving 100%
-> detection with zero false positives against background noise.
+## Analyst outputs
+
+- `data/processed/incident_timeline.csv` — normalized, chronological alerts.
+- `data/processed/host_risk_scores.csv` — severity-weighted asset ranking.
+- `data/processed/attack_chain_summary.csv` — alert count and observed window by stage.
+- `data/processed/evaluation_metrics.json` — labelled synthetic benchmark results.
+- `reports/incident_report.md` — executive summary, evidence, IOCs, actions, and assessment.
+
+## Design decisions
+
+- **Technique-scoped rules:** each detector targets a documented behavior instead of a vague anomaly score.
+- **Corroborating telemetry:** credential access combines a process-access event with a dump artifact; ransomware combines recovery inhibition, file behavior, notes, and anti-forensics.
+- **Asset normalization:** firewall IPs are resolved to lab hostnames before risk scoring so the same asset is not counted twice.
+- **Transparent evaluation:** expected alerts are versioned separately from detector output and checked in tests.
+- **Deterministic generation:** the fixed random seed makes demonstrations, tests, and interview walkthroughs reproducible.
+
+## Limitations
+
+- The dataset is synthetic and represents one attack path.
+- The rules are signature and threshold based; they have not been validated on production telemetry.
+- Email-gateway evidence, memory forensics, EDR containment, and recovery execution are outside the current lab.
+- The risk score supports triage but is not a calibrated probability of compromise.
+
+## Suggested CV bullet
+
+> Built an end-to-end Python SOC/DFIR lab that generated and correlated 210 Windows, Sysmon, firewall, and file events across a five-stage ransomware scenario; implemented five ATT&CK-mapped detection modules, asset risk scoring, labelled evaluation, automated CI validation, a Streamlit investigation dashboard, and an incident report.
+
+For a recruiter walkthrough, interview pitch, and safe resume wording, see [`docs/PORTFOLIO_GUIDE.md`](docs/PORTFOLIO_GUIDE.md).
+
+## License
+
+MIT License. See [`LICENSE`](LICENSE).

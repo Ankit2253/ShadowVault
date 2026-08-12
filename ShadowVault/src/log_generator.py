@@ -299,6 +299,11 @@ def write_csv(path, header, rows):
 def main():
     OUT_DIR.mkdir(parents=True, exist_ok=True)
 
+    # Make repeated in-process runs deterministic for notebooks and tests.
+    random.seed(RNG_SEED)
+    for rows in (sec_rows, sysmon_rows, fw_rows, file_rows):
+        rows.clear()
+
     generate_noise()
     stage_initial_access()
     stage_credential_theft()

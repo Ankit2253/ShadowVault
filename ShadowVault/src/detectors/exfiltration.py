@@ -14,7 +14,7 @@ Logic:
 import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).resolve().parent.parent))
-from utils import load_logs, alert
+from utils import load_logs, alert, resolve_hostname
 
 ARCHIVE_TOOLS = {"7z.exe", "rar.exe", "winrar.exe", "zip.exe"}
 BYTES_SENT_THRESHOLD = 100_000_000  # 100 MB - well above routine browsing traffic
@@ -39,12 +39,13 @@ def detect(sysmon, fw):
     ]
     for _, row in large_outbound.iterrows():
         blocked = row["Action"] == "Blocked"
+        source_host = resolve_hostname(row["SourceIP"])
         alerts.append(alert(
             stage="4 - Data Exfiltration Attempt",
             technique="Anomalously large outbound transfer to external host"
                        + (" (blocked at perimeter)" if blocked else " (NOT blocked)"),
             mitre_id="T1041",
-            timestamp=row["Timestamp"], host=row["SourceIP"], account="n/a",
+            timestamp=row["Timestamp"], host=source_host, account="n/a",
             detail=f"{row['SourceIP']} -> {row['DestinationIP']}:{row['DestinationPort']} "
                    f"({row['BytesSent']:,} bytes, action={row['Action']})",
             severity="Critical" if not blocked else "High",

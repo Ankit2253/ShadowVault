@@ -1,11 +1,15 @@
 # Incident Report: Operation ShadowVault
-**Generated:** 2026-07-25 23:53  
+**Generated:** 2026-08-13 00:44  
 **Classification:** Simulated Incident (Training Exercise)  
 **Organization:** Meridian Precision Manufacturing (fictional)  
-**Incident Date:** 2026-07-14
+**Incident Date:** 2026-07-14  
+**Case Status:** Contained; recovery and credential reset required
 
 ## Executive Summary
-On 2026-07-14, an employee in Accounts Payable opened a malicious attachment delivered via email, triggering a five-stage intrusion that progressed from initial access to full ransomware deployment in approximately **5.2 hours**. The attacker dumped credentials from a compromised finance workstation, used a stolen IT administrator account to move laterally across **6 hosts**, staged and attempted to exfiltrate proprietary data to external infrastructure, and ultimately deployed ransomware that deleted shadow copy backups and encrypted files across four endpoints and the file server. This report reconstructs the full attack chain from correlated log data.
+On 2026-07-14, an employee in Accounts Payable opened a malicious attachment delivered via email, triggering a five-stage intrusion that progressed from initial access to full ransomware deployment in approximately **5.2 hours**. The attacker dumped credentials from a compromised finance workstation, used a stolen IT administrator account to move laterally across the environment, staged and attempted to exfiltrate proprietary data to external infrastructure, and ultimately deployed ransomware that deleted shadow copy backups and encrypted files across three workstations and the file server. This report reconstructs the full attack chain from correlated log data. Alert evidence was observed on **5 named assets**.
+
+## Scope and Confidence
+This report is produced from a deterministic, labelled training dataset. The detections provide high-confidence evidence for this scenario, but the benchmark results must not be interpreted as production detection performance.
 
 ## Attack Chain Overview
 | Stage | Alerts | First Observed | Last Observed |
@@ -19,11 +23,10 @@ On 2026-07-14, an employee in Accounts Payable opened a malicious attachment del
 ## Host Risk Ranking
 | Host | Risk Score |
 |---|---|
+| SRV-FILE-01 | 23 |
 | WKS-FIN-07 | 20 |
-| SRV-FILE-01 | 18 |
 | WKS-ENG-12 | 13 |
 | WKS-HR-03 | 13 |
-| 10.10.5.10 | 5 |
 | SRV-DC-01 | 2 |
 
 ## Detailed Timeline
@@ -53,9 +56,9 @@ On 2026-07-14, an employee in Accounts Payable opened a malicious attachment del
 ### 4 - Data Exfiltration Attempt
 - **2026-07-14 12:31:00** 🟠 `T1560` — Archive utility used to stage data (likely pre-exfil compression) on **SRV-FILE-01** (account: j.alvarez)  
   _7z.exe :: 7z.exe a -mx1 archive_backup.7z "\\SRV-FILE-01\Shared\*"_
-- **2026-07-14 12:44:00** 🔴 `T1041` — Anomalously large outbound transfer to external host (NOT blocked) on **10.10.5.10** (account: n/a)  
+- **2026-07-14 12:44:00** 🔴 `T1041` — Anomalously large outbound transfer to external host (NOT blocked) on **SRV-FILE-01** (account: n/a)  
   _10.10.5.10 -> 203.0.113.77:443 (1,800,000,000 bytes, action=Allow)_
-- **2026-07-14 12:51:30** 🟠 `T1041` — Anomalously large outbound transfer to external host (blocked at perimeter) on **10.10.5.10** (account: n/a)  
+- **2026-07-14 12:51:30** 🟠 `T1041` — Anomalously large outbound transfer to external host (blocked at perimeter) on **SRV-FILE-01** (account: n/a)  
   _10.10.5.10 -> 203.0.113.77:443 (210,000,000 bytes, action=Blocked)_
 
 ### 5 - Ransomware Deployment
@@ -111,3 +114,16 @@ On 2026-07-14, an employee in Accounts Payable opened a malicious attachment del
 - Alert on `vssadmin delete shadows` and similar shadow-copy deletion commands.
 - Implement DLP egress filtering and alerting on large outbound transfers to unfamiliar external hosts.
 - Maintain offline/immutable backups so shadow-copy deletion cannot prevent recovery.
+
+## Incident-Response Actions
+| Priority | Action | Reason |
+|---|---|---|
+| P0 | Isolate WKS-FIN-07, WKS-ENG-12, WKS-HR-03 and SRV-FILE-01 | Stop encryption and attacker access |
+| P0 | Disable `j.alvarez` sessions and rotate privileged credentials | Stolen administrator credentials enabled lateral movement |
+| P0 | Block 203.0.113.55 and 203.0.113.77 in the simulated environment | Cut off staging and exfiltration infrastructure |
+| P1 | Preserve volatile data and disk evidence before rebuilding | Support root-cause analysis and timeline validation |
+| P1 | Restore from verified immutable backups | Shadow copies were deleted and cannot be trusted |
+| P2 | Hunt for the listed IOCs and ATT&CK techniques across the fleet | Identify systems outside the known attack path |
+
+## Analyst Assessment
+**Severity: Critical. Confidence: High.** Multiple independent telemetry sources corroborate credential theft, privileged lateral movement, large outbound data transfer, recovery inhibition, and mass file renaming. The allowed 1.8 GB outbound transfer means data exfiltration should be treated as likely until proxy, DLP, and destination-side evidence proves otherwise.
