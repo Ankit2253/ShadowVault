@@ -169,12 +169,6 @@ The easiest way to test custom data is to export CSVs with the same headers as t
 - Email-gateway evidence, memory forensics, EDR containment, and recovery execution are outside the current lab.
 - The risk score supports triage but is not a calibrated probability of compromise.
 
-## Suggested CV bullet
-
-> Built an end-to-end Python SOC/DFIR lab that generated and correlated 210 Windows, Sysmon, firewall, and file events across a five-stage ransomware scenario; implemented five ATT&CK-mapped detection modules, asset risk scoring, labelled evaluation, automated CI validation, a Streamlit investigation dashboard, and an incident report.
-
-For a recruiter walkthrough, interview pitch, and safe resume wording, see [`docs/PORTFOLIO_GUIDE.md`](docs/PORTFOLIO_GUIDE.md).
-
 ## License
 
 MIT License. See [`LICENSE`](LICENSE).
