@@ -110,7 +110,7 @@ macOS or Linux:
 
 ```bash
 source .venv/bin/activate
-pip install -r requirements-dev.txt
+pip install -r requirements.txt
 ```
 
 ### 2. Run the complete pipeline
