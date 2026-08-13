@@ -103,7 +103,7 @@ Windows PowerShell:
 
 ```powershell
 .venv\Scripts\Activate.ps1
-pip install -r requirements-dev.txt
+pip install -r requirements.txt
 ```
 
 macOS or Linux:
