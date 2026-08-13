@@ -169,6 +169,9 @@ The easiest way to test custom data is to export CSVs with the same headers as t
 - Email-gateway evidence, memory forensics, EDR containment, and recovery execution are outside the current lab.
 - The risk score supports triage but is not a calibrated probability of compromise.
 
+## Live Demo
+
+[🛡️ Open the ShadowVault SOC Dashboard](https://shadowvault-2jcm5djfdpvf7pmvqr72nu.streamlit.app/)
 ## License
 
 MIT License. See [`LICENSE`](LICENSE).
