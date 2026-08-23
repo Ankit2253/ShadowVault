@@ -290,7 +290,7 @@ def stage_ransomware():
 def write_csv(path, header, rows):
     rows_sorted = sorted(rows, key=lambda r: r[0])
     with open(path, "w", newline="", encoding="utf-8") as f:
-        w = csv.writer(f)
+        w = csv.writer(f, lineterminator="\n")
         w.writerow(header)
         w.writerows(rows_sorted)
     print(f"  wrote {len(rows_sorted):>4} rows -> {path.name}")

@@ -1,3 +1,5 @@
+[tool.shadowvault]
+version = "1.1.0.dev0"
 [tool.ruff]
 line-length = 110
 target-version = "py310"
