@@ -58,6 +58,7 @@ USERS = {
 
 ATTACKER_STAGER_IP = "203.0.113.55"
 ATTACKER_EXFIL_IP = "203.0.113.77"
+ATTACKER_EVASIVE_IP = "203.0.113.88"
 
 sec_rows, sysmon_rows, fw_rows, file_rows = [], [], [], []
 
@@ -247,6 +248,36 @@ def stage_exfiltration():
 
 
 # ---------------------------------------------------------------------------
+# 5b. Labelled edge cases - intentionally outside current v1.0 coverage
+# ---------------------------------------------------------------------------
+
+def stage_evasive_activity():
+    """Add realistic evidence that keeps the benchmark from being perfect.
+
+    These rows are labelled in ground truth but are not detected by the v1.0
+    rules. They provide honest false negatives for future detector hardening.
+    """
+    spray_source = "10.10.20.5"
+    sprayed_accounts = ["a.bauer", "m.chen", "r.patel", "t.oconnor", "svc_backup"]
+    for index, account in enumerate(sprayed_accounts):
+        event_time = t(9, 54, 0) + timedelta(minutes=index)
+        sec_rows.append([
+            ts(event_time), "SRV-DC-01", 4625, "An account failed to log on",
+            account, "MERIDIAN", spray_source, 3, "Failure",
+        ])
+
+    # Four individually small flows total 120 MB. The current detector checks
+    # only single flows above 100 MB and therefore misses the aggregate volume.
+    for index in range(4):
+        flow_time = t(13, 10, 0) + timedelta(minutes=index)
+        fw_rows.append([
+            ts(flow_time), HOSTS["SRV-FILE-01"], 50020 + index,
+            ATTACKER_EVASIVE_IP, 443, "TCP", "Allow",
+            30_000_000, 2_000, "Outbound",
+        ])
+
+
+# ---------------------------------------------------------------------------
 # 6. Stage 5 - Ransomware Deployment (T1490 Inhibit System Recovery,
 #    T1486 Data Encrypted for Impact)
 # ---------------------------------------------------------------------------
@@ -290,7 +321,8 @@ def stage_ransomware():
 def write_csv(path, header, rows):
     rows_sorted = sorted(rows, key=lambda r: r[0])
     with open(path, "w", newline="", encoding="utf-8") as f:
-        w = csv.writer(f)
+        # Keep generated fixtures stable across Windows and Unix runners.
+        w = csv.writer(f, lineterminator="\n")
         w.writerow(header)
         w.writerows(rows_sorted)
     print(f"  wrote {len(rows_sorted):>4} rows -> {path.name}")
@@ -309,6 +341,7 @@ def main():
     stage_credential_theft()
     stage_lateral_movement()
     stage_exfiltration()
+    stage_evasive_activity()
     stage_ransomware()
 
     print("Generating Operation ShadowVault synthetic dataset...")
