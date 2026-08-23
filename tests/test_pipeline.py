@@ -1,4 +1,4 @@
-import sys
+﻿import sys
 import unittest
 from pathlib import Path
 
@@ -40,10 +40,12 @@ class PipelineTests(unittest.TestCase):
 
         self.assertEqual(metrics["true_positives"], 27)
         self.assertEqual(metrics["false_positives"], 0)
-        self.assertEqual(metrics["false_negatives"], 0)
+        self.assertEqual(metrics["false_negatives"], 2)
         self.assertEqual(metrics["precision"], 1.0)
-        self.assertEqual(metrics["recall"], 1.0)
-        self.assertEqual(metrics["f1_score"], 1.0)
+        self.assertEqual(metrics["recall"], 0.931)
+        self.assertEqual(metrics["f1_score"], 0.9643)
+        self.assertEqual(metrics["expected_alerts"], 29)
+        self.assertEqual(metrics["generated_alerts"], 27)
 
     def test_uploaded_frames_use_the_same_detection_pipeline(self):
         timeline = correlate_logs(*load_logs())

@@ -2,6 +2,7 @@ Stage,MITRE_ID,Timestamp,Hostname
 1 - Initial Access,T1566.001 / T1204.002 / T1059.001,2026-07-14 09:16:12,WKS-FIN-07
 2 - Credential Theft,T1003.001,2026-07-14 09:45:09,WKS-FIN-07
 2 - Credential Theft,T1003.001,2026-07-14 09:45:20,WKS-FIN-07
+2 - Credential Theft,T1110.003,2026-07-14 09:58:00,SRV-DC-01
 3 - Lateral Movement,T1569.002,2026-07-14 10:30:20,WKS-ENG-12
 3 - Lateral Movement,T1569.002,2026-07-14 10:45:28,WKS-HR-03
 3 - Lateral Movement,T1021.002,2026-07-14 10:55:34,SRV-FILE-01
@@ -10,6 +11,7 @@ Stage,MITRE_ID,Timestamp,Hostname
 4 - Data Exfiltration Attempt,T1560,2026-07-14 12:31:00,SRV-FILE-01
 4 - Data Exfiltration Attempt,T1041,2026-07-14 12:44:00,SRV-FILE-01
 4 - Data Exfiltration Attempt,T1041,2026-07-14 12:51:30,SRV-FILE-01
+4 - Data Exfiltration Attempt,T1041,2026-07-14 13:13:00,SRV-FILE-01
 5 - Ransomware Deployment,T1490,2026-07-14 14:00:39,WKS-ENG-12
 5 - Ransomware Deployment,T1070.001,2026-07-14 14:00:39,WKS-ENG-12
 5 - Ransomware Deployment,T1490,2026-07-14 14:00:54,SRV-FILE-01
