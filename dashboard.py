@@ -15,7 +15,12 @@ sys.path.insert(0, str(PROJECT_DIR / "src"))
 
 from correlation_engine import attack_chain_summary, correlate_logs, score_by_host
 from report_generator import build_report, build_uploaded_report
-from utils import LOG_SCHEMAS, normalize_log_frame
+from utils import (
+    LOG_SCHEMAS,
+    YOCTO_LOG_FILENAME,
+    YOCTO_LOG_SCHEMA,
+    normalize_log_frame,
+)
 
 
 st.set_page_config(page_title="ShadowVault SOC Dashboard", page_icon="🛡️", layout="wide")
@@ -44,7 +49,7 @@ def load_sample_results():
 
 
 def read_uploaded_logs(uploaded_files):
-    """Read, validate, and normalize four uploaded CSVs without saving them."""
+    """Read, validate, and normalize supported CSVs without saving them."""
     frames = {}
     for filename, uploaded_file in uploaded_files.items():
         try:
@@ -75,15 +80,18 @@ if data_mode == "Built-in simulation":
     report_name = "shadowvault_sample_incident_report.md"
 else:
     st.info(
-        "Upload all four CSV telemetry sources. Files are processed only for this dashboard "
-        "session and are not written over the sample dataset. Remove confidential or personal "
-        "information before using logs outside an authorized environment."
+        "Upload the four required CSV telemetry sources and, optionally, normalized Yocto "
+        "endpoint telemetry. Files are processed only for this dashboard session and are not "
+        "written over the sample dataset. Remove confidential or personal information before "
+        "using logs outside an authorized environment."
     )
 
     with st.expander("Required filenames and columns"):
         for filename, columns in LOG_SCHEMAS.items():
             st.markdown(f"**{filename}**")
             st.code(",".join(columns), language="text")
+        st.markdown(f"**{YOCTO_LOG_FILENAME}** (optional)")
+        st.code(",".join(YOCTO_LOG_SCHEMA), language="text")
 
     upload_left, upload_right = st.columns(2)
     with upload_left:
@@ -112,6 +120,12 @@ else:
             key="file_activity_upload",
             help="Expected structure: file_activity_logs.csv",
         )
+        yocto_upload = st.file_uploader(
+            "Yocto embedded endpoint events (optional)",
+            type="csv",
+            key="yocto_upload",
+            help=f"Expected structure: {YOCTO_LOG_FILENAME}",
+        )
 
     uploaded_files = {
         "windows_security_events.csv": security_upload,
@@ -126,11 +140,14 @@ else:
 
     try:
         frames = read_uploaded_logs(uploaded_files)
+        if yocto_upload is not None:
+            frames.update(read_uploaded_logs({YOCTO_LOG_FILENAME: yocto_upload}))
         timeline = correlate_logs(
             frames["windows_security_events.csv"],
             frames["sysmon_events.csv"],
             frames["network_firewall_logs.csv"],
             frames["file_activity_logs.csv"],
+            yocto=frames.get(YOCTO_LOG_FILENAME),
         )
     except ValueError as error:
         st.error(f"CSV validation failed: {error}")

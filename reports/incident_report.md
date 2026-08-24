@@ -1,8 +1,8 @@
 # Incident Report: Operation ShadowVault
-**Generated:** 2026-08-24 00:40  
-**Classification:** Simulated Incident (Training Exercise)  
-**Organization:** Meridian Precision Manufacturing (fictional)  
-**Incident Date:** 2026-07-14  
+**Generated:** 2026-08-24 00:58<br>
+**Classification:** Simulated Incident (Training Exercise)<br>
+**Organization:** Meridian Precision Manufacturing (fictional)<br>
+**Incident Date:** 2026-07-14<br>
 **Case Status:** Contained; recovery and credential reset required
 
 ## Executive Summary

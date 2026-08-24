@@ -17,6 +17,13 @@ intel team actually uses.
 | 5. Ransomware Deployment | Inhibit System Recovery | T1490 | `detectors/ransomware.py` |
 | 5. Ransomware Deployment | Data Encrypted for Impact | T1486 | `detectors/ransomware.py` |
 | 5. Ransomware Deployment | Indicator Removal: Clear Windows Event Logs | T1070.001 | `detectors/ransomware.py` |
+| Embedded Endpoint Monitoring | Brute Force: Password Guessing | T1110.001 | `detectors/yocto_endpoint.py` |
+| Embedded Endpoint Monitoring | Abuse Elevation Control Mechanism: Sudo and Sudo Caching | T1548.003 | `detectors/yocto_endpoint.py` |
+| Embedded Endpoint Monitoring | Impair Defenses: Disable or Modify Tools | T1562.001 | `detectors/yocto_endpoint.py` |
+
+The embedded-endpoint detections are optional and run only when normalized
+`yocto_device_events.csv` telemetry is supplied. They are tested separately so
+the original ransomware benchmark remains directly comparable between runs.
 
 ## Why this mapping matters for the project write-up
 

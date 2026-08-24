@@ -1,0 +1,10 @@
+Timestamp,Hostname,SourceIP,Program,EventType,Account,RemoteIP,Path,Result,Message
+2026-07-14 08:00:00,IOT-GW-01,10.10.30.15,systemd,BOOT,root,,,,Device boot completed
+2026-07-14 15:00:00,IOT-GW-01,10.10.30.15,sshd,AUTH_FAILURE,admin,203.0.113.90,,Failure,Failed password for admin
+2026-07-14 15:01:00,IOT-GW-01,10.10.30.15,sshd,AUTH_FAILURE,admin,203.0.113.90,,Failure,Failed password for admin
+2026-07-14 15:02:00,IOT-GW-01,10.10.30.15,sshd,AUTH_FAILURE,admin,203.0.113.90,,Failure,Failed password for admin
+2026-07-14 15:03:00,IOT-GW-01,10.10.30.15,sshd,AUTH_FAILURE,admin,203.0.113.90,,Failure,Failed password for admin
+2026-07-14 15:04:00,IOT-GW-01,10.10.30.15,sshd,AUTH_FAILURE,admin,203.0.113.90,,Failure,Failed password for admin
+2026-07-14 15:06:00,IOT-GW-01,10.10.30.15,sshd,AUTH_SUCCESS,operator,10.10.20.5,,Success,Accepted public key for operator
+2026-07-14 15:08:00,IOT-GW-01,10.10.30.15,auditd,CONFIG_CHANGE,operator,,/etc/audit/rules.d/30-shadowvault.rules,Success,Audit policy file modified
+2026-07-14 15:10:00,IOT-GW-01,10.10.30.15,auditd,PRIVILEGED_EXEC,operator,,/usr/bin/sudo,Success,Privileged command executed

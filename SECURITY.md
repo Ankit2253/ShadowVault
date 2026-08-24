@@ -12,4 +12,11 @@ The repository does not contain or execute:
 
 All external addresses use IANA documentation space. Do not use this project as evidence that a detection is production ready without validation on authorized telemetry.
 
+The optional `meta-shadowvault` layer installs audit watches and log forwarding
+only. It does not contain active-response, exploitation, persistence, or attack
+simulation code. Its default TCP syslog configuration is intended for the
+isolated lab network; production deployments must use authenticated encryption,
+device-specific credentials or certificates, data minimization, and an approved
+retention policy.
+
 If you find an unsafe file or exposed secret in a fork, remove it from public access and report it privately to the repository owner.

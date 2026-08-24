@@ -26,6 +26,16 @@ LOG_SCHEMAS = {
     ],
 }
 
+YOCTO_LOG_FILENAME = "yocto_device_events.csv"
+YOCTO_LOG_SCHEMA = [
+    "Timestamp", "Hostname", "SourceIP", "Program", "EventType",
+    "Account", "RemoteIP", "Path", "Result", "Message",
+]
+SUPPORTED_LOG_SCHEMAS = {
+    **LOG_SCHEMAS,
+    YOCTO_LOG_FILENAME: YOCTO_LOG_SCHEMA,
+}
+
 ASSET_IP_MAP = {
     "10.10.12.47": "WKS-FIN-07",
     "10.10.14.22": "WKS-ENG-12",
@@ -47,7 +57,9 @@ def load_logs():
 
 def validate_log_frame(frame, filename):
     """Return the columns missing from one supported telemetry CSV."""
-    expected = LOG_SCHEMAS[filename]
+    if filename not in SUPPORTED_LOG_SCHEMAS:
+        raise ValueError(f"Unsupported telemetry filename: {filename}")
+    expected = SUPPORTED_LOG_SCHEMAS[filename]
     return [column for column in expected if column not in frame.columns]
 
 

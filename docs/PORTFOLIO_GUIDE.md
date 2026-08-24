@@ -2,11 +2,11 @@
 
 ## Best GitHub description
 
-> End-to-end Python SOC/DFIR lab: synthetic Windows/Sysmon/firewall/file telemetry, five MITRE ATT&CK-mapped ransomware detectors, alert correlation, risk scoring, labelled evaluation, automated CI tests, Streamlit dashboard, and incident reporting.
+> End-to-end SOC/DFIR lab combining Python detection engineering with an optional Yocto embedded-Linux endpoint, Wazuh/syslog telemetry, ATT&CK mapping, labelled evaluation, CI, dashboarding, and incident reporting.
 
 ## CV bullet
 
-> Built an end-to-end Python SOC/DFIR lab that generated and correlated 210 Windows, Sysmon, firewall, and file events across a five-stage ransomware scenario; implemented five ATT&CK-mapped detection modules, asset risk scoring, labelled evaluation, automated CI validation, a Streamlit investigation dashboard, and an incident report.
+> Built an end-to-end SOC/DFIR lab that generated and correlated 219 Windows, Sysmon, firewall, and file events across a five-stage ransomware scenario; added a Yocto 6.0 embedded endpoint with audit/syslog forwarding to Wazuh, optional IoT detections, labelled evaluation, CI, dashboarding, and incident reporting.
 
 ## Shorter CV bullet
 
@@ -14,7 +14,7 @@
 
 ## 60-second interview explanation
 
-“Operation ShadowVault is a safe SOC and incident-response simulation I built in Python. It generates 210 synthetic events across Windows Security, Sysmon, firewall, and file-activity logs, with one ransomware intrusion hidden inside normal activity. I wrote five technique-scoped detectors for phishing execution, LSASS access, lateral movement, exfiltration, and ransomware impact. A correlation layer normalizes the results into a timeline and calculates per-host risk scores. I also added labelled ground truth, automated validation, GitHub CI, a Streamlit investigation dashboard, and an analyst-style incident report. The key lesson was that one alert is rarely enough—the confidence comes from correlating independent telemetry sources across time, host, account, and ATT&CK technique.”
+“Operation ShadowVault is a safe SOC and incident-response lab. Its Python pipeline generates 219 Windows, Sysmon, firewall, and file events and reconstructs a ransomware intrusion. I also built an optional Yocto 6.0 layer that turns an embedded Linux device into a monitored endpoint using auditd and queued syslog forwarding to Wazuh. A converter normalizes Wazuh exports, and separate detections cover SSH brute force, privileged execution, and security-logging changes. The core synthetic benchmark remains isolated so I can compare rule changes honestly.”
 
 ## Five-minute demonstration
 
@@ -37,13 +37,13 @@ No single source shows the whole incident. Sysmon provides process and LSASS acc
 
 `SRV-FILE-01` contains evidence from lateral movement, privileged service execution, archive staging, large outbound transfer, recovery inhibition, audit-log clearing, and file encryption. The score accumulates severity weights from all of those alerts.
 
-### Does F1 = 1.0 mean the detector is production ready?
+### Does the synthetic F1 score mean the detector is production ready?
 
-No. It means the rules exactly recover the labelled behaviors in this deterministic lab without additional alerts. Production performance would require varied attacks, clean baselines, adversarial cases, tuning, and validation against real organizational telemetry.
+No. The current benchmark deliberately includes two false negatives, giving an F1 of 0.9643. Production performance would still require varied attacks, clean baselines, adversarial cases, tuning, and validation against authorized organizational telemetry.
 
 ### What would you improve next?
 
-I would add C2 beaconing detection, Sigma equivalents, multiple randomized scenarios, clean-only baseline datasets, ATT&CK tactic fields, a real SIEM ingestion path, and unit tests for threshold edge cases.
+I would run the Yocto layer through a real BitBake build on Wrynose, validate it on QEMU and target hardware, replace lab TCP syslog with authenticated encryption, add Wazuh decoders/rules, and measure false positives against a clean embedded-device baseline.
 
 ### What was the most important engineering fix?
 
@@ -59,7 +59,7 @@ Normalizing firewall source IPs to asset names before risk scoring. Without that
 ## GitHub presentation checklist
 
 - Pin the repository on your profile.
-- Add topics: `soc`, `dfir`, `detection-engineering`, `ransomware`, `mitre-attack`, `sysmon`, `streamlit`, `python`.
+- Add topics: `soc`, `dfir`, `detection-engineering`, `ransomware`, `mitre-attack`, `yocto`, `embedded-linux`, `wazuh`, `streamlit`, `python`.
 - Keep the generated incident report and processed sample outputs committed.
 - Confirm the GitHub Actions workflow is green.
 - Add one dashboard screenshot to the README after running it locally.

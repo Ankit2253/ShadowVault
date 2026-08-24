@@ -1,0 +1,13 @@
+## ShadowVault defensive audit policy.
+## Watches security-relevant configuration; it does not execute response actions.
+
+-w /etc/passwd -p wa -k shadowvault_identity
+-w /etc/group -p wa -k shadowvault_identity
+-w /etc/shadow -p wa -k shadowvault_identity
+-w /etc/ssh/sshd_config -p wa -k shadowvault_ssh_config
+-w /etc/audit/ -p wa -k shadowvault_audit_config
+-w /etc/rsyslog.conf -p wa -k shadowvault_log_config
+-w /etc/rsyslog.d/ -p wa -k shadowvault_log_config
+
+## Record successful and failed privileged executions for later triage.
+-a always,exit -S execve -F euid=0 -k shadowvault_privileged

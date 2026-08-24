@@ -21,10 +21,10 @@ SEVERITY_ICON = {"Critical": "🔴", "High": "🟠", "Medium": "🟡", "Low": "�
 def build_report(timeline, risk, summary):
     lines = []
     lines.append("# Incident Report: Operation ShadowVault")
-    lines.append(f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M')}  ")
-    lines.append("**Classification:** Simulated Incident (Training Exercise)  ")
-    lines.append("**Organization:** Meridian Precision Manufacturing (fictional)  ")
-    lines.append("**Incident Date:** 2026-07-14  ")
+    lines.append(f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M')}<br>")
+    lines.append("**Classification:** Simulated Incident (Training Exercise)<br>")
+    lines.append("**Organization:** Meridian Precision Manufacturing (fictional)<br>")
+    lines.append("**Incident Date:** 2026-07-14<br>")
     lines.append("**Case Status:** Contained; recovery and credential reset required\n")
 
     lines.append("## Executive Summary")
